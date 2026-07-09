@@ -18,7 +18,7 @@ steps:
     run: |
       mkdir -p /tmp/gh-aw/data
       REPO="${{ github.repository }}"
-      SINCE=$(date -u -d '24 hours ago' '+%Y-%m-%dT%H:%M:%SZ')
+      SINCE=$(date -u -d "@$(($(date -u +%s) - 86400))" '+%Y-%m-%dT%H:%M:%SZ')
       TODAY=$(date -u '+%Y-%m-%d')
       echo "$TODAY" > /tmp/gh-aw/data/today.txt
 
