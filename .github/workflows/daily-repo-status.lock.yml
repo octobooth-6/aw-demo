@@ -450,26 +450,31 @@ jobs:
           gh api "repos/$REPO/commits?since=$SINCE&per_page=100" \
             --jq '[.[] | {sha: .sha[0:7], url: .html_url, message: (.commit.message | split("\n")[0]), author: (.author.login // .commit.author.name)}]' \
             > /tmp/gh-aw/data/commits.json
+          echo "commits: $(jq length /tmp/gh-aw/data/commits.json)"
 
           # PRs opened in last 24 h
           gh api "repos/$REPO/pulls?state=all&sort=created&direction=desc&per_page=100" \
-            --jq --arg s "$SINCE" '[.[] | select(.created_at >= $s) | {number, title, url: .html_url, author: .user.login, state, merged_at}]' \
+            | jq --arg s "$SINCE" '[.[] | select(.created_at >= $s) | {number, title, url: .html_url, author: .user.login, state, merged_at}]' \
             > /tmp/gh-aw/data/prs_opened.json
+          echo "prs_opened: $(jq length /tmp/gh-aw/data/prs_opened.json)"
 
           # PRs merged in last 24 h
           gh api "repos/$REPO/pulls?state=closed&sort=updated&direction=desc&per_page=100" \
-            --jq --arg s "$SINCE" '[.[] | select(.merged_at != null and .merged_at >= $s) | {number, title, url: .html_url, author: .user.login}]' \
+            | jq --arg s "$SINCE" '[.[] | select(.merged_at != null and .merged_at >= $s) | {number, title, url: .html_url, author: .user.login}]' \
             > /tmp/gh-aw/data/prs_merged.json
+          echo "prs_merged: $(jq length /tmp/gh-aw/data/prs_merged.json)"
 
           # PRs closed (unmerged) in last 24 h
           gh api "repos/$REPO/pulls?state=closed&sort=updated&direction=desc&per_page=100" \
-            --jq --arg s "$SINCE" '[.[] | select(.merged_at == null and .closed_at >= $s) | {number, title, url: .html_url, author: .user.login}]' \
+            | jq --arg s "$SINCE" '[.[] | select(.merged_at == null and .closed_at >= $s) | {number, title, url: .html_url, author: .user.login}]' \
             > /tmp/gh-aw/data/prs_closed.json
+          echo "prs_closed: $(jq length /tmp/gh-aw/data/prs_closed.json)"
 
           # Issues opened and closed in last 24 h
           gh api "repos/$REPO/issues?state=all&sort=updated&direction=desc&per_page=100&since=$SINCE" \
-            --jq --arg s "$SINCE" '[.[] | select(.pull_request == null) | {number, title, url: .html_url, author: .user.login, state, created_at, closed_at}]' \
+            --jq '[.[] | select(.pull_request == null) | {number, title, url: .html_url, author: .user.login, state, created_at, closed_at}]' \
             > /tmp/gh-aw/data/issues.json
+          echo "issues: $(jq length /tmp/gh-aw/data/issues.json)"
 
       - name: Configure Git credentials
         env:
