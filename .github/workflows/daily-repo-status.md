@@ -46,6 +46,8 @@ steps:
       gh api "repos/$REPO/issues?state=all&sort=updated&direction=desc&per_page=100&since=$SINCE" \
         --jq --arg s "$SINCE" '[.[] | select(.pull_request == null) | {number, title, url: .html_url, author: .user.login, state, created_at, closed_at}]' \
         > /tmp/gh-aw/data/issues.json
+    env:
+      GH_TOKEN: ${{ github.token }}
 safe-outputs:
   create-issue:
 network:
