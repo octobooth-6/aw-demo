@@ -78,38 +78,20 @@ Today's date is in `/tmp/gh-aw/data/today.txt`. Read all pre-fetched data from `
 **Issue body format:**
 
 ```
-## 📊 Daily Status — <TODAY>
-
 > Last 24 hours · `<repo>`
 
----
+| 🔀 PRs | 🐛 Issues | 📝 Commits |
+|--------|-----------|------------|
+| N opened · N merged · N closed | N opened · N closed | N total |
 
-### 🔀 Pull Requests
+<If there are any PRs, list up to 5 highlights (prefer merged/opened over closed):>
+**Highlights**
+- [#N](url) Title — @author ✅/🔀/❌
 
-**Opened:** N | **Merged:** N | **Closed:** N
-
-<bullet list: - [#N](url) Title (@author)>
-
----
-
-### 🐛 Issues
-
-**Opened:** N | **Closed:** N
-
-<bullet list: - [#N](url) Title (@author)>
-
----
-
-### 📝 Commits
-
-**Total:** N
-
-<bullet list: - [`sha`](url) Message — @author>
-
----
-
-_Nothing to report in a section → write "Nothing to report."_
+<one cheerful sentence wrapping up the day, e.g. "Busy day! 🚀" or "Quiet day — the repo rests. 😴" — keep it short and fun>
 ```
+
+_Empty arrays in every section → use `noop` instead of creating an issue._
 
 Add the label `daily-report` to the issue (create it with colour `#0075ca` if it does not exist).
 
